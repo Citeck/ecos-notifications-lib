@@ -11,28 +11,34 @@ import java.util.*
 import java.util.function.BiConsumer
 
 private const val TARGET_APP = "notifications"
+
 private val INTERNAL_DEFAULT_LOCALE: Locale = Locale.ENGLISH
+private const val INTERNAL_DEFAULT_FROM = "ecos.notification@citeck.ru"
 
 class NotificationService(
-        private val commandsService: CommandsService,
-        private val recordsService: RecordsService,
-        private val recordsMetaService: RecordsMetaService,
-        private val notificationTemplateService: NotificationTemplateService
+    private val commandsService: CommandsService,
+    private val recordsService: RecordsService,
+    private val recordsMetaService: RecordsMetaService,
+    private val notificationTemplateService: NotificationTemplateService
 ) {
 
     var defaultLocale: Locale? = null
+    var defaultFrom: String? = null
 
     fun send(notification: Notification) {
         val filledModel = fillModel(notification)
         val locale = notification.lang ?: defaultLocale ?: INTERNAL_DEFAULT_LOCALE
+        val from = notification.from ?: defaultFrom ?: INTERNAL_DEFAULT_FROM
 
         val command = SendNotificationCommand(
-                notification.templateRef,
-                notification.type,
-                locale.toString(),
-                notification.recipients,
-                notification.from,
-                filledModel
+            templateRef = notification.templateRef,
+            type = notification.type,
+            lang = locale.toString(),
+            recipients = notification.recipients,
+            from = from,
+            cc = notification.cc,
+            bcc = notification.bcc,
+            model = filledModel
         )
 
         commandsService.execute {
@@ -64,10 +70,10 @@ class NotificationService(
 
         if (notification.additionalMeta.isNotEmpty()) {
             recordsMetaService.getMeta(notification.additionalMeta, additionalModel)
-                    .attributes
-                    .forEach(BiConsumer { key, attr ->
-                        filledModel[key] = attr
-                    })
+                .attributes
+                .forEach(BiConsumer { key, attr ->
+                    filledModel[key] = attr
+                })
         }
 
         return filledModel

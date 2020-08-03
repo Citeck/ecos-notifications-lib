@@ -20,6 +20,9 @@ open class NotificationsServiceConfig {
     @Value("\${notifications.default.locale}")
     private lateinit var defaultAppNotificationLocale: String
 
+    @Value("\${notifications.default.from}")
+    private lateinit var defaultAppNotificationFrom: String
+
     @Bean
     @ConditionalOnMissingBean(NotificationService::class)
     open fun ecosNotificationService(commandsService: CommandsService,
@@ -30,6 +33,7 @@ open class NotificationsServiceConfig {
         val service = NotificationService(commandsService, recordsService, recordsMetaService,
                 notificationTemplateService)
         service.defaultLocale = LocaleUtils.toLocale(defaultAppNotificationLocale)
+        service.defaultFrom = defaultAppNotificationFrom
         return service
     }
 
