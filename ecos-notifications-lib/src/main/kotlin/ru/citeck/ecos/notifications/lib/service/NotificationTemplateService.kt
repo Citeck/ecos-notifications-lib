@@ -1,24 +1,20 @@
 package ru.citeck.ecos.notifications.lib.service
 
-import ru.citeck.ecos.notifications.lib.dto.TemplateModelDto
+import ru.citeck.ecos.notifications.lib.dto.TemplateMultiModelAttributesDto
 import ru.citeck.ecos.records2.RecordRef
 import ru.citeck.ecos.records2.source.dao.local.RemoteSyncRecordsDao
-import java.util.HashMap
-import java.util.function.BiConsumer
 
 class NotificationTemplateService(
-        private val remoteSyncTemplateModelRecordsDao: RemoteSyncRecordsDao<TemplateModelDto>
+        private val remoteSyncTemplateMultiModelAttributesRecordsDao: RemoteSyncRecordsDao<TemplateMultiModelAttributesDto>
 ) {
 
-    fun getTemplateModel(template: RecordRef): Map<String, String> {
-        val modelDto = remoteSyncTemplateModelRecordsDao.getRecord(template)
-        if (!modelDto.isPresent) {
-            return emptyMap()
+    fun getMultiModelAttributes(template: RecordRef): Set<String> {
+        val dto = remoteSyncTemplateMultiModelAttributesRecordsDao.getRecord(template)
+        if (!dto.isPresent) {
+            return emptySet()
         }
 
-        val model: MutableMap<String, String> = HashMap()
-        modelDto.get().model?.forEach(BiConsumer { s, dataValue -> model[s] = dataValue.asText() })
-        return model
+        return dto.get().attributes.orEmpty()
     }
 
 }

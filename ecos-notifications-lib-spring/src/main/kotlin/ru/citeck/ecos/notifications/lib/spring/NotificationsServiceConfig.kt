@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import ru.citeck.ecos.commands.CommandsService
-import ru.citeck.ecos.notifications.lib.dto.TemplateModelDto
+import ru.citeck.ecos.notifications.lib.dto.TemplateMultiModelAttributesDto
 import ru.citeck.ecos.notifications.lib.service.NotificationService
 import ru.citeck.ecos.notifications.lib.service.NotificationTemplateService
 import ru.citeck.ecos.records2.RecordsService
@@ -40,14 +40,14 @@ open class NotificationsServiceConfig {
     @Bean
     @ConditionalOnMissingBean(NotificationTemplateService::class)
     open fun notificationTemplateService(
-            @Qualifier("remoteSyncTemplateModelRecordsDao") syncRecordsDao: RemoteSyncRecordsDao<TemplateModelDto>
+            @Qualifier("remoteSyncTemplateModelRecordsDao") syncRecordsDao: RemoteSyncRecordsDao<TemplateMultiModelAttributesDto>
     ): NotificationTemplateService {
         return NotificationTemplateService(syncRecordsDao)
     }
 
     @Bean
-    open fun remoteSyncTemplateModelRecordsDao(): RemoteSyncRecordsDao<TemplateModelDto> {
-        return RemoteSyncRecordsDao("notifications/template", TemplateModelDto::class.java)
+    open fun remoteSyncTemplateModelRecordsDao(): RemoteSyncRecordsDao<TemplateMultiModelAttributesDto> {
+        return RemoteSyncRecordsDao("notifications/template", TemplateMultiModelAttributesDto::class.java)
     }
 
 }

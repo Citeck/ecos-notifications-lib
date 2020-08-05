@@ -49,18 +49,16 @@ class NotificationService(
     }
 
     private fun fillModel(notification: Notification): Map<String, Any> {
+        val requiredModel = notificationTemplateService.getMultiModelAttributes(notification.templateRef)
 
-        val requiredModel = notificationTemplateService.getTemplateModel(notification.templateRef)
+        val recordModel = getPrefilledModel()
+        val additionalModel = mutableSetOf<String>()
 
-
-        val recordModel = mutableMapOf<String, String>()
-        val additionalModel = mutableMapOf<String, String>()
-
-        requiredModel.forEach { (key, attr) ->
+        requiredModel.forEach { attr ->
             if (StringUtils.startsWithAny(attr, "$", ".att(n:\"$", ".atts(n:\"$")) {
-                additionalModel[key] = attr.replaceFirst("\$", "")
+                additionalModel.add(attr.replaceFirst("\$", ""))
             } else {
-                recordModel[key] = attr
+                recordModel.add(attr)
             }
         }
 
@@ -77,6 +75,10 @@ class NotificationService(
         }
 
         return filledModel
+    }
+
+    private fun getPrefilledModel(): MutableSet<String> {
+        return mutableSetOf("_etype?id")
     }
 
 }
