@@ -6,7 +6,6 @@ import ru.citeck.ecos.notifications.lib.Notification
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
 import ru.citeck.ecos.records2.RecordsService
 import ru.citeck.ecos.records2.meta.RecordsMetaService
-import ru.citeck.ecos.records2.rest.RemoteRecordsUtils
 import java.time.Duration
 import java.util.*
 import java.util.function.BiConsumer
@@ -65,18 +64,16 @@ class NotificationService(
 
         val filledModel = mutableMapOf<String, Any>()
 
-        RemoteRecordsUtils.runAsSystem {
-            recordsService.getAttributes(notification.record, recordModel).forEach {
-                key, attr -> filledModel[key] = attr
-            }
+        recordsService.getAttributes(notification.record, recordModel).forEach { key, attr ->
+            filledModel[key] = attr
+        }
 
-            if (notification.additionalMeta.isNotEmpty()) {
-                recordsMetaService.getMeta(notification.additionalMeta, additionalModel)
-                    .attributes
-                    .forEach(BiConsumer { key, attr ->
-                        filledModel[key] = attr
-                    })
-            }
+        if (notification.additionalMeta.isNotEmpty()) {
+            recordsMetaService.getMeta(notification.additionalMeta, additionalModel)
+                .attributes
+                .forEach(BiConsumer { key, attr ->
+                    filledModel[key] = attr
+                })
         }
 
         return filledModel
