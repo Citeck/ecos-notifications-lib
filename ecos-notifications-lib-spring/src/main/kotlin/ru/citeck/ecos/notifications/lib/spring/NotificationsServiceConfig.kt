@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 import ru.citeck.ecos.commands.CommandsService
 import ru.citeck.ecos.notifications.lib.dto.TemplateMultiModelAttributesDto
 import ru.citeck.ecos.notifications.lib.service.NotificationService
+import ru.citeck.ecos.notifications.lib.service.NotificationServiceImpl
 import ru.citeck.ecos.notifications.lib.service.NotificationTemplateService
 import ru.citeck.ecos.records2.RecordsService
 import ru.citeck.ecos.records2.meta.RecordsMetaService
@@ -30,7 +31,7 @@ open class NotificationsServiceConfig {
                                      recordsMetaService: RecordsMetaService,
                                      notificationTemplateService: NotificationTemplateService
     ): NotificationService {
-        val service = NotificationService(commandsService, recordsService, recordsMetaService,
+        val service = NotificationServiceImpl(commandsService, recordsService, recordsMetaService,
                 notificationTemplateService)
         service.defaultLocale = LocaleUtils.toLocale(defaultAppNotificationLocale)
         service.defaultFrom = defaultAppNotificationFrom
