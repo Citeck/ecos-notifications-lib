@@ -9,7 +9,7 @@ class NotificationTemplateService(
 ) {
 
     fun getMultiModelAttributes(template: RecordRef): Set<String> {
-        val dto = remoteSyncTemplateMultiModelAttributesRecordsDao.getRecord(template)
+        val dto = remoteSyncTemplateMultiModelAttributesRecordsDao.getRecord(template.id)
         if (!dto.isPresent) {
             return emptySet()
         }

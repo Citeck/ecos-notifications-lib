@@ -1,10 +1,9 @@
 package ru.citeck.ecos.notifications.lib.dto
 
-import ru.citeck.ecos.records2.graphql.meta.annotation.MetaAtt
+import ru.citeck.ecos.records3.record.op.atts.service.schema.annotation.AttName
 
 class TemplateMultiModelAttributesDto {
 
-    @MetaAtt("multiModelAttributes[]")
+    @AttName("multiModelAttributes[]")
     var attributes: Set<String>? = emptySet()
-
 }

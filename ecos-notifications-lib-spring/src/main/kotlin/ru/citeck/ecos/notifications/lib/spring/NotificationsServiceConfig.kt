@@ -11,9 +11,8 @@ import ru.citeck.ecos.notifications.lib.dto.TemplateMultiModelAttributesDto
 import ru.citeck.ecos.notifications.lib.service.NotificationService
 import ru.citeck.ecos.notifications.lib.service.NotificationServiceImpl
 import ru.citeck.ecos.notifications.lib.service.NotificationTemplateService
-import ru.citeck.ecos.records2.RecordsService
-import ru.citeck.ecos.records2.meta.RecordsMetaService
 import ru.citeck.ecos.records2.source.dao.local.RemoteSyncRecordsDao
+import ru.citeck.ecos.records3.RecordsService
 
 @Configuration
 open class NotificationsServiceConfig {
@@ -28,11 +27,9 @@ open class NotificationsServiceConfig {
     @ConditionalOnMissingBean(NotificationService::class)
     open fun ecosNotificationService(commandsService: CommandsService,
                                      recordsService: RecordsService,
-                                     recordsMetaService: RecordsMetaService,
                                      notificationTemplateService: NotificationTemplateService
     ): NotificationService {
-        val service = NotificationServiceImpl(commandsService, recordsService, recordsMetaService,
-                notificationTemplateService)
+        val service = NotificationServiceImpl(commandsService, recordsService, notificationTemplateService)
         service.defaultLocale = LocaleUtils.toLocale(defaultAppNotificationLocale)
         service.defaultFrom = defaultAppNotificationFrom
         return service
