@@ -1,7 +1,7 @@
 package ru.citeck.ecos.notifications.lib.service
 
 import ru.citeck.ecos.records2.RecordRef
-import ru.citeck.ecos.records2.RecordsService
+import ru.citeck.ecos.records3.RecordsService
 
 class NotificationTemplateService(
     private val recordsService: RecordsService

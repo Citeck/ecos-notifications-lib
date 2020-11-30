@@ -2,10 +2,10 @@ package ru.citeck.ecos.notifications.lib.service
 
 import org.apache.commons.lang3.StringUtils
 import ru.citeck.ecos.commands.CommandsService
+import ru.citeck.ecos.commons.data.DataValue
 import ru.citeck.ecos.notifications.lib.Notification
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
-import ru.citeck.ecos.records2.RecordsService
-import ru.citeck.ecos.records2.meta.RecordsMetaService
+import ru.citeck.ecos.records3.RecordsService
 import java.time.Duration
 import java.util.*
 import java.util.function.BiConsumer
@@ -18,7 +18,6 @@ private const val INTERNAL_DEFAULT_FROM = "ecos.notification@citeck.ru"
 class NotificationServiceImpl(
     private val commandsService: CommandsService,
     private val recordsService: RecordsService,
-    private val recordsMetaService: RecordsMetaService,
     private val notificationTemplateService: NotificationTemplateService
 ) : NotificationService {
 
@@ -64,13 +63,13 @@ class NotificationServiceImpl(
 
         val filledModel = mutableMapOf<String, Any>()
 
-        recordsService.getAttributes(notification.record, recordModel).forEach { key, attr ->
-            filledModel[key] = attr
-        }
+        recordsService.getAtts(notification.record, recordModel).forEach(BiConsumer {
+            key, attr -> filledModel[key] = attr
+        })
 
         if (notification.additionalMeta.isNotEmpty() && additionalModel.isNotEmpty()) {
-            recordsMetaService.getMeta(notification.additionalMeta, additionalModel)
-                .attributes
+            recordsService.getAtts(notification.additionalMeta, additionalModel)
+                .getAtts()
                 .forEach(BiConsumer { key, attr ->
                     filledModel[key] = attr
                 })
