@@ -51,11 +51,11 @@ class NotificationServiceImpl(
         val requiredModel = notificationTemplateService.getMultiModelAttributes(notification.templateRef)
 
         val recordModel = getPrefilledModel()
-        val additionalModel = mutableSetOf<String>()
+        val additionalModel = mutableMapOf<String, String>()
 
         requiredModel.forEach { attr ->
             if (StringUtils.startsWithAny(attr, "$", ".att(n:\"$", ".atts(n:\"$")) {
-                additionalModel.add(attr.replaceFirst("\$", ""))
+                additionalModel[attr] = attr.replaceFirst("\$", "")
             } else {
                 recordModel.add(attr)
             }
