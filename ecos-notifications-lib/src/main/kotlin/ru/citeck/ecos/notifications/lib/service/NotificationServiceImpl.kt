@@ -2,7 +2,6 @@ package ru.citeck.ecos.notifications.lib.service
 
 import org.apache.commons.lang3.StringUtils
 import ru.citeck.ecos.commands.CommandsService
-import ru.citeck.ecos.commons.data.DataValue
 import ru.citeck.ecos.notifications.lib.Notification
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
 import ru.citeck.ecos.records3.RecordsService
