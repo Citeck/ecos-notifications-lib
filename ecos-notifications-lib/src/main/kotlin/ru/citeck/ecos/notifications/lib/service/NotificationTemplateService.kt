@@ -8,7 +8,7 @@ class NotificationTemplateService(
 ) {
 
     fun getMultiModelAttributes(template: RecordRef): Set<String> {
-        val attributes = recordsService.getAttribute(template, "multiModelAttributes[]")
+        val attributes = recordsService.getAtt(template, "multiModelAttributes[]")
         if (attributes.isNull()) {
             return emptySet()
         }

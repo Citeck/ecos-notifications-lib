@@ -26,12 +26,7 @@ open class NotificationsServiceConfig {
                                      recordsService: RecordsService,
                                      notificationTemplateService: NotificationTemplateService
     ): NotificationService {
-
-        val service = NotificationServiceImpl(
-            commandsService,
-            recordsService,
-            notificationTemplateService)
-
+        val service = NotificationServiceImpl(commandsService, recordsService, notificationTemplateService)
         service.defaultLocale = LocaleUtils.toLocale(defaultAppNotificationLocale)
         service.defaultFrom = defaultAppNotificationFrom
         return service
