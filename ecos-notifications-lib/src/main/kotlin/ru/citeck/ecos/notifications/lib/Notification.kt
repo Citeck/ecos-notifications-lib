@@ -16,7 +16,7 @@ data class Notification(
     val additionalMeta: Map<String, Any>
 ) {
 
-    //We use builder pattern in kotlin, because this builder may be invoked from java code
+    // We use builder pattern in kotlin, because this builder may be invoked from java code
     class Builder {
         private var record: RecordRef = RecordRef.EMPTY
         private var templateRef: RecordRef = RecordRef.EMPTY
