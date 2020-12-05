@@ -62,16 +62,15 @@ class NotificationServiceImpl(
 
         val filledModel = mutableMapOf<String, Any>()
 
-        recordsService.getAtts(notification.record, recordModel).forEach(BiConsumer {
+        recordsService.getAtts(notification.record, recordModel).forEach {
             key, attr -> filledModel[key] = attr
-        })
+        }
 
         if (notification.additionalMeta.isNotEmpty() && additionalModel.isNotEmpty()) {
             recordsService.getAtts(notification.additionalMeta, additionalModel)
-                .getAtts()
-                .forEach(BiConsumer { key, attr ->
+                .forEach { key, attr ->
                     filledModel[key] = attr
-                })
+                }
         }
 
         return filledModel
