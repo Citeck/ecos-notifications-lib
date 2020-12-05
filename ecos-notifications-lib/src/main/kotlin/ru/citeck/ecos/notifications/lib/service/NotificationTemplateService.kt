@@ -15,5 +15,4 @@ class NotificationTemplateService(
 
         return attributes.asList(String::class.java).toSet()
     }
-
 }

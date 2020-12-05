@@ -22,9 +22,10 @@ open class NotificationsServiceConfig {
 
     @Bean
     @ConditionalOnMissingBean(NotificationService::class)
-    open fun ecosNotificationService(commandsService: CommandsService,
-                                     recordsService: RecordsService,
-                                     notificationTemplateService: NotificationTemplateService
+    open fun ecosNotificationService(
+        commandsService: CommandsService,
+        recordsService: RecordsService,
+        notificationTemplateService: NotificationTemplateService
     ): NotificationService {
         val service = NotificationServiceImpl(commandsService, recordsService, notificationTemplateService)
         service.defaultLocale = LocaleUtils.toLocale(defaultAppNotificationLocale)
@@ -39,5 +40,4 @@ open class NotificationsServiceConfig {
     ): NotificationTemplateService {
         return NotificationTemplateService(recordsService)
     }
-
 }

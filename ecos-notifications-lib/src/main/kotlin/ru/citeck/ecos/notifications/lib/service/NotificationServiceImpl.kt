@@ -7,7 +7,6 @@ import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
 import ru.citeck.ecos.records3.RecordsService
 import java.time.Duration
 import java.util.*
-import java.util.function.BiConsumer
 
 private const val TARGET_APP = "notifications"
 
@@ -63,7 +62,8 @@ class NotificationServiceImpl(
         val filledModel = mutableMapOf<String, Any>()
 
         recordsService.getAtts(notification.record, recordModel).forEach {
-            key, attr -> filledModel[key] = attr
+            key, attr ->
+            filledModel[key] = attr
         }
 
         if (notification.additionalMeta.isNotEmpty() && additionalModel.isNotEmpty()) {
@@ -79,5 +79,4 @@ class NotificationServiceImpl(
     private fun getPrefilledModel(): MutableSet<String> {
         return mutableSetOf("_etype?id")
     }
-
 }
