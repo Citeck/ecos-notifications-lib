@@ -5,7 +5,7 @@ import ru.citeck.ecos.records2.RecordRef
 import java.util.*
 
 data class Notification(
-    val record: RecordRef,
+    val record: Any?,
     val templateRef: RecordRef,
     val type: NotificationType,
     val recipients: Set<String>,
@@ -18,7 +18,7 @@ data class Notification(
 
     // We use builder pattern in kotlin, because this builder may be invoked from java code
     class Builder {
-        private var record: RecordRef = RecordRef.EMPTY
+        private var record: Any? = null
         private var templateRef: RecordRef = RecordRef.EMPTY
         private var type: NotificationType = NotificationType.EMAIL_NOTIFICATION
         private var recipients: MutableSet<String> = mutableSetOf()
@@ -28,7 +28,7 @@ data class Notification(
         private var lang: Locale? = null
         private var additionalMeta: MutableMap<String, Any> = mutableMapOf()
 
-        fun record(record: RecordRef) = apply { this.record = record }
+        fun record(record: Any?) = apply { this.record = record }
         fun templateRef(templateRef: RecordRef) = apply { this.templateRef = templateRef }
         fun notificationType(type: NotificationType) = apply { this.type = type }
 
