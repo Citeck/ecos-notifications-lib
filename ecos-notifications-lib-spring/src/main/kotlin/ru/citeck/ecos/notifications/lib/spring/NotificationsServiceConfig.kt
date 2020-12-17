@@ -10,6 +10,7 @@ import ru.citeck.ecos.notifications.lib.service.NotificationService
 import ru.citeck.ecos.notifications.lib.service.NotificationServiceImpl
 import ru.citeck.ecos.notifications.lib.service.NotificationTemplateService
 import ru.citeck.ecos.records3.RecordsService
+import ru.citeck.ecos.records3.RecordsServiceFactory
 
 @Configuration
 open class NotificationsServiceConfig {
@@ -24,10 +25,10 @@ open class NotificationsServiceConfig {
     @ConditionalOnMissingBean(NotificationService::class)
     open fun ecosNotificationService(
         commandsService: CommandsService,
-        recordsService: RecordsService,
+        recordsServiceFactory: RecordsServiceFactory,
         notificationTemplateService: NotificationTemplateService
     ): NotificationService {
-        val service = NotificationServiceImpl(commandsService, recordsService, notificationTemplateService)
+        val service = NotificationServiceImpl(commandsService, recordsServiceFactory, notificationTemplateService)
         service.defaultLocale = LocaleUtils.toLocale(defaultAppNotificationLocale)
         service.defaultFrom = defaultAppNotificationFrom
         return service

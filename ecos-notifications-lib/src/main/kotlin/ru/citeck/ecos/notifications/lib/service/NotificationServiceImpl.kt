@@ -1,10 +1,10 @@
 package ru.citeck.ecos.notifications.lib.service
 
-import org.apache.commons.lang3.StringUtils
 import ru.citeck.ecos.commands.CommandsService
 import ru.citeck.ecos.notifications.lib.Notification
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
-import ru.citeck.ecos.records3.RecordsService
+import ru.citeck.ecos.records3.RecordsServiceFactory
+import ru.citeck.ecos.records3.record.request.RequestContext
 import java.time.Duration
 import java.util.*
 
@@ -15,14 +15,17 @@ private const val INTERNAL_DEFAULT_FROM = "ecos.notification@citeck.ru"
 
 class NotificationServiceImpl(
     private val commandsService: CommandsService,
-    private val recordsService: RecordsService,
+    private val recordsServiceFactory: RecordsServiceFactory,
     private val notificationTemplateService: NotificationTemplateService
 ) : NotificationService {
+
+    private val recordsService = recordsServiceFactory.recordsServiceV1
 
     var defaultLocale: Locale? = null
     var defaultFrom: String? = null
 
     override fun send(notification: Notification) {
+
         val filledModel = fillModel(notification)
         val locale = notification.lang ?: defaultLocale ?: INTERNAL_DEFAULT_LOCALE
         val from = notification.from ?: defaultFrom ?: INTERNAL_DEFAULT_FROM
@@ -46,31 +49,22 @@ class NotificationServiceImpl(
     }
 
     private fun fillModel(notification: Notification): Map<String, Any> {
+
         val requiredModel = notificationTemplateService.getMultiModelAttributes(notification.templateRef)
-
-        val recordModel = getPrefilledModel()
-        val additionalModel = mutableMapOf<String, String>()
-
-        requiredModel.forEach { attr ->
-            if (StringUtils.startsWithAny(attr, "$", ".att(n:\"$", ".atts(n:\"$")) {
-                additionalModel[attr] = attr.replaceFirst("\$", "")
-            } else {
-                recordModel.add(attr)
-            }
-        }
+        val attsToRequest = getPrefilledModel()
+        attsToRequest.addAll(requiredModel)
 
         val filledModel = mutableMapOf<String, Any>()
 
-        recordsService.getAtts(notification.record, recordModel).forEach {
-            key, attr ->
-            filledModel[key] = attr
-        }
-
-        if (notification.additionalMeta.isNotEmpty() && additionalModel.isNotEmpty()) {
-            recordsService.getAtts(notification.additionalMeta, additionalModel)
-                .forEach { key, attr ->
-                    filledModel[key] = attr
-                }
+        RequestContext.doWithCtx(
+            recordsServiceFactory,
+            { data ->
+                data.withCtxAtts(notification.additionalMeta)
+            }
+        ) {
+            recordsService.getAtts(notification.record, attsToRequest).forEach { key, attr ->
+                filledModel[key] = attr
+            }
         }
 
         return filledModel
