@@ -23,7 +23,7 @@
         <kotlin.logging.version>1.12.5</kotlin.logging.version>
 
         <ecos.jackson.version>2.10.4.3</ecos.jackson.version>
-        <ecos.commands.version>2.4.0</ecos.commands.version>
+        <ecos.commands.version>2.5.0</ecos.commands.version>
         <ecos.commons.version>2.5.0</ecos.commons.version>
         <ecos.records.version>3.32.0</ecos.records.version>
 
