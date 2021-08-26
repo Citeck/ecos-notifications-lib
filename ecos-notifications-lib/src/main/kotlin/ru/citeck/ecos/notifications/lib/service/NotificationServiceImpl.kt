@@ -31,6 +31,7 @@ class NotificationServiceImpl(
         val from = notification.from ?: defaultFrom ?: INTERNAL_DEFAULT_FROM
 
         val command = SendNotificationCommand(
+            record = notification.record,
             templateRef = notification.templateRef,
             type = notification.type,
             lang = locale.toString(),
