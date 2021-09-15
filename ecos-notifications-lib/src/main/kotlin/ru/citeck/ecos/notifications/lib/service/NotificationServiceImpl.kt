@@ -71,9 +71,9 @@ class NotificationServiceImpl(
         if (notification.additionalMeta.isNotEmpty() && additionalModel.isNotEmpty()) {
             recordsMetaService.getMeta(notification.additionalMeta, additionalModel)
                 .attributes
-                .forEach(BiConsumer { key, attr ->
+                .forEach { key, attr ->
                     filledModel[key] = attr
-                })
+                }
         }
 
         return filledModel

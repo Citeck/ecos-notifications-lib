@@ -7,7 +7,7 @@
 
     <groupId>ru.citeck.ecos</groupId>
     <artifactId>ecos-notifications-lib-project</artifactId>
-    <version>1.2.0</version>
+    <version>1.6.0</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -23,13 +23,9 @@
         <kotlin.logging.version>1.7.8</kotlin.logging.version>
 
         <ecos.jackson.version>2.10.4.3</ecos.jackson.version>
-        <ecos.snakeyaml.version>2.1.3</ecos.snakeyaml.version>
-        <ecos.commands.version>1.6.0</ecos.commands.version>
-        <ecos.commons.version>1.9.0</ecos.commons.version>
-        <ecos.records.version>1.33.0</ecos.records.version>
-        <ecos.meta-repo.version>1.1.0</ecos.meta-repo.version>
-
-        <groovy.version>2.5.9</groovy.version>
+        <ecos.commands.version>1.9.0</ecos.commands.version>
+        <ecos.commons.version>1.14.0</ecos.commons.version>
+        <ecos.records.version>1.36.0</ecos.records.version>
 
     </properties>
 
@@ -44,13 +40,6 @@
 
         <dependency>
             <groupId>ru.citeck.ecos</groupId>
-            <artifactId>ecos-meta-repo</artifactId>
-            <version>${ecos.meta-repo.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.citeck.ecos</groupId>
             <artifactId>ecos-commands</artifactId>
             <version>${ecos.commands.version}</version>
             <scope>provided</scope>
@@ -60,13 +49,6 @@
             <groupId>ru.citeck.ecos.commons</groupId>
             <artifactId>ecos-commons</artifactId>
             <version>${ecos.commons.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.citeck.ecos</groupId>
-            <artifactId>ecos-snakeyaml</artifactId>
-            <version>${ecos.snakeyaml.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -117,28 +99,6 @@
             <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
-            <type>pom</type>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.junit.platform</groupId>
-                    <artifactId>junit-platform-launcher</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.testng</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
