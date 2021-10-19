@@ -6,7 +6,7 @@ import ru.citeck.ecos.records2.RecordRef
 
 @CommandType("ecos.notifications.send")
 data class SendNotificationCommand(
-    val record: Any?,
+    val record: RecordRef,
     val templateRef: RecordRef,
     val type: NotificationType,
     val lang: String,
