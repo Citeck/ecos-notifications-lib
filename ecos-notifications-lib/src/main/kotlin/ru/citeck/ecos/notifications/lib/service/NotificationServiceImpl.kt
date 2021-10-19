@@ -3,6 +3,7 @@ package ru.citeck.ecos.notifications.lib.service
 import ru.citeck.ecos.commands.CommandsService
 import ru.citeck.ecos.notifications.lib.Notification
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
+import ru.citeck.ecos.records2.RecordRef
 import ru.citeck.ecos.records3.RecordsServiceFactory
 import ru.citeck.ecos.records3.record.request.RequestContext
 import java.time.Duration
@@ -30,8 +31,14 @@ class NotificationServiceImpl(
         val locale = notification.lang ?: defaultLocale ?: INTERNAL_DEFAULT_LOCALE
         val from = notification.from ?: defaultFrom ?: INTERNAL_DEFAULT_FROM
 
+        val recordRef = if (notification.record is RecordRef) {
+            notification.record
+        } else {
+            RecordRef.valueOf(recordsService.getAtt(notification.record, "?id").asText())
+        }
+
         val command = SendNotificationCommand(
-            record = notification.record,
+            record = recordRef,
             templateRef = notification.templateRef,
             type = notification.type,
             lang = locale.toString(),
