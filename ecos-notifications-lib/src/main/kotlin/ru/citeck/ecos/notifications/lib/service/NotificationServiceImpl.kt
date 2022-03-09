@@ -38,7 +38,10 @@ class NotificationServiceImpl(
         }
 
         val command = SendNotificationCommand(
+            id = notification.id,
             record = recordRef,
+            title = notification.title,
+            body = notification.body,
             templateRef = notification.templateRef,
             type = notification.type,
             lang = locale.toString(),
@@ -57,6 +60,9 @@ class NotificationServiceImpl(
     }
 
     private fun fillModel(notification: Notification): Map<String, Any> {
+        if (notification.templateRef == RecordRef.EMPTY) {
+            return emptyMap()
+        }
 
         val requiredModel = notificationTemplateService.getMultiModelAttributes(notification.templateRef)
         val attsToRequest = getPrefilledModel()

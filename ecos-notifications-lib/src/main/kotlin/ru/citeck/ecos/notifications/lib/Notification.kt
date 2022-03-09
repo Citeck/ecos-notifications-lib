@@ -5,7 +5,10 @@ import ru.citeck.ecos.records2.RecordRef
 import java.util.*
 
 data class Notification(
+    val id: String,
     val record: Any?,
+    val title: String = "",
+    val body: String = "",
     val templateRef: RecordRef,
     val type: NotificationType,
     val recipients: Set<String>,
@@ -18,7 +21,10 @@ data class Notification(
 
     // We use builder pattern in kotlin, because this builder may be invoked from java code
     class Builder {
+        private var id: String? = null
         private var record: Any? = null
+        private var title: String = ""
+        private var body: String = ""
         private var templateRef: RecordRef = RecordRef.EMPTY
         private var type: NotificationType = NotificationType.EMAIL_NOTIFICATION
         private var recipients: MutableSet<String> = mutableSetOf()
@@ -28,8 +34,13 @@ data class Notification(
         private var lang: Locale? = null
         private var additionalMeta: MutableMap<String, Any> = mutableMapOf()
 
+        fun id(id: String) = apply { this.id = id }
         fun record(record: Any?) = apply { this.record = record }
+
+        fun title(title: String) = apply { this.title = title }
+        fun body(body: String) = apply { this.body = body }
         fun templateRef(templateRef: RecordRef) = apply { this.templateRef = templateRef }
+
         fun notificationType(type: NotificationType) = apply { this.type = type }
 
         fun recipients(recipients: Collection<String>) = apply { this.recipients = recipients.toMutableSet() }
@@ -55,10 +66,16 @@ data class Notification(
 
         fun build() = let {
 
-            if (RecordRef.EMPTY == templateRef) throw BuildNotificationException("TemplateRef is mandatory parameter")
+            if (body.isBlank() && RecordRef.EMPTY == templateRef) {
+                throw BuildNotificationException("TemplateRef is mandatory parameter with empty body")
+            }
+            if (id.isNullOrBlank()) id = UUID.randomUUID().toString()
 
             Notification(
+                id!!,
                 record,
+                title,
+                body,
                 templateRef,
                 type,
                 recipients,
