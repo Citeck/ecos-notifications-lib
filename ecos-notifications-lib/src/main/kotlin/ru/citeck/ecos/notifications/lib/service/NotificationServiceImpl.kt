@@ -60,7 +60,7 @@ class NotificationServiceImpl(
     }
 
     private fun fillModel(notification: Notification): Map<String, Any> {
-        if (notification.body.isNotBlank()) {
+        if (notification.templateRef == RecordRef.EMPTY) {
             return emptyMap()
         }
 
