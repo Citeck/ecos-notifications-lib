@@ -32,7 +32,7 @@ timestamps {
           doGenerateSubmoduleConfigurations: false,
           extensions: [],
           submoduleCfg: [],
-          userRemoteConfigs: [[credentialsId: 'awx.integrations', url: "git@bitbucket.org:citeck/ecos-notifications-lib.git"]]
+          userRemoteConfigs: [[credentialsId: 'awx.integrations', url: "git@gitlab.citeck.ru:citeck-projects/ecos-notifications-lib.git"]]
         ])
       }
       def project_version = readMavenPom().getVersion()
