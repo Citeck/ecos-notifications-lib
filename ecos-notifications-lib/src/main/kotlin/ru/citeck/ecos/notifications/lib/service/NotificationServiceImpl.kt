@@ -2,34 +2,29 @@ package ru.citeck.ecos.notifications.lib.service
 
 import ru.citeck.ecos.commands.CommandsService
 import ru.citeck.ecos.notifications.lib.Notification
+import ru.citeck.ecos.notifications.lib.NotificationsProperties
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
 import ru.citeck.ecos.records2.RecordRef
 import ru.citeck.ecos.records3.RecordsServiceFactory
 import ru.citeck.ecos.records3.record.request.RequestContext
 import java.time.Duration
-import java.util.*
 
 private const val TARGET_APP = "notifications"
-
-private val INTERNAL_DEFAULT_LOCALE: Locale = Locale.ENGLISH
-private const val INTERNAL_DEFAULT_FROM = "ecos.notification@citeck.ru"
 
 class NotificationServiceImpl(
     private val commandsService: CommandsService,
     private val recordsServiceFactory: RecordsServiceFactory,
-    private val notificationTemplateService: NotificationTemplateService
+    private val notificationTemplateService: NotificationTemplateService,
+    private val properties: NotificationsProperties
 ) : NotificationService {
 
     private val recordsService = recordsServiceFactory.recordsServiceV1
 
-    var defaultLocale: Locale? = null
-    var defaultFrom: String? = null
-
     override fun send(notification: Notification) {
 
         val filledModel = fillModel(notification)
-        val locale = notification.lang ?: defaultLocale ?: INTERNAL_DEFAULT_LOCALE
-        val from = notification.from ?: defaultFrom ?: INTERNAL_DEFAULT_FROM
+        val locale = notification.lang ?: properties.defaultLocale
+        val from = notification.from ?: properties.defaultFrom
 
         val recordRef = if (notification.record is RecordRef) {
             notification.record
