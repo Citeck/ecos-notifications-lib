@@ -6,7 +6,7 @@ mirror:
     - shell
   stage: mirror
   variables:
-    TARGET_REPO: "git@github.com:Citeck/ecos-community-core.git"
+    TARGET_REPO: "git@github.com:Citeck/ecos-notifications-lib.git"
     GIT_STRATEGY: clone
   cache: {}
   only:
@@ -20,7 +20,6 @@ mirror:
     - chmod -R go-rwx ~/.ssh
     - git remote add mirror $TARGET_REPO
     - git remote show mirror
-    - git remote -v 
     - git fetch --unshallow origin
     - git push -f --progress mirror HEAD:master
     - git checkout develop
