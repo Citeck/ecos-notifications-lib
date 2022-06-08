@@ -35,7 +35,9 @@ timestamps {
                     userRemoteConfigs                : [[credentialsId: 'awx.integrations', url: "git@gitlab.citeck.ru:citeck-projects/ecos-notifications-lib.git"]]
                 ])
             }
-            def project_version = readMavenPom().getVersion()
+
+            def project_version = readMavenPom().getProperties().getProperty("revision")
+
             mattermostSend endpoint: 'https://mm.citeck.ru/hooks/9ytch3uox3retkfypuq7xi3yyr', channel: "build_notifications", color: 'good', message: " :arrow_forward: **Build project ecos-notifications-lib:**\n**Branch:** ${env.BRANCH_NAME}\n**Version:** ${project_version}\n**Build id:** ${env.BUILD_NUMBER}\n**Build url:** ${env.BUILD_URL}\n**Changes:**\n" + getChangeString()
 
             if (!(env.BRANCH_NAME ==~ /master(-\d)?/) && (!project_version.contains('SNAPSHOT'))) {
