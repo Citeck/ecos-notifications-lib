@@ -13,6 +13,7 @@ private const val TARGET_APP = "notifications"
 
 private val INTERNAL_DEFAULT_LOCALE: Locale = Locale.ENGLISH
 private const val INTERNAL_DEFAULT_FROM = "ecos.notification@citeck.ru"
+private const val MODEL_DATA = "_data"
 
 class NotificationServiceImpl(
     private val commandsService: CommandsService,
@@ -79,6 +80,9 @@ class NotificationServiceImpl(
             recordsService.getAtts(notification.record, attsToRequest).forEach { key, attr ->
                 filledModel[key] = attr
             }
+        }
+        notification.additionalMeta[MODEL_DATA]?.let {
+            filledModel.putIfAbsent(MODEL_DATA, it!!)
         }
 
         return filledModel
