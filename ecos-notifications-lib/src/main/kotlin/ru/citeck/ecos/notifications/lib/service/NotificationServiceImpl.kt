@@ -77,7 +77,7 @@ class NotificationServiceImpl(
             }
         }
         notification.additionalMeta[MODEL_DATA]?.let {
-            filledModel.putIfAbsent(MODEL_DATA, it!!)
+            filledModel.putIfAbsent(MODEL_DATA, it)
         }
 
         return filledModel
