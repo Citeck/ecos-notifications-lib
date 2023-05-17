@@ -10,6 +10,7 @@ import ru.citeck.ecos.records3.record.request.RequestContext
 import java.time.Duration
 
 private const val TARGET_APP = "notifications"
+private const val MODEL_DATA = "_data"
 
 class NotificationServiceImpl(
     private val commandsService: CommandsService,
@@ -74,6 +75,9 @@ class NotificationServiceImpl(
             recordsService.getAtts(notification.record, attsToRequest).forEach { key, attr ->
                 filledModel[key] = attr
             }
+        }
+        notification.additionalMeta[MODEL_DATA]?.let {
+            filledModel.putIfAbsent(MODEL_DATA, it)
         }
 
         return filledModel
