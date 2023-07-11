@@ -17,5 +17,6 @@ data class SendNotificationCommand(
     val from: String,
     val cc: Set<String> = emptySet(),
     val bcc: Set<String> = emptySet(),
-    val model: Map<String, Any>
+    val model: Map<String, Any>,
+    val createdFrom: String = ""
 )
