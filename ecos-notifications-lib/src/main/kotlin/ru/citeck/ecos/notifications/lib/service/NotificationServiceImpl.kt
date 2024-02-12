@@ -4,9 +4,9 @@ import ru.citeck.ecos.commands.CommandsService
 import ru.citeck.ecos.notifications.lib.Notification
 import ru.citeck.ecos.notifications.lib.NotificationsProperties
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
-import ru.citeck.ecos.records2.RecordRef
 import ru.citeck.ecos.records3.RecordsServiceFactory
 import ru.citeck.ecos.records3.record.request.RequestContext
+import ru.citeck.ecos.webapp.api.entity.EntityRef
 import java.time.Duration
 
 private const val TARGET_APP = "notifications"
@@ -27,10 +27,10 @@ class NotificationServiceImpl(
         val locale = notification.lang ?: properties.defaultLocale
         val from = notification.from ?: properties.defaultFrom
 
-        val recordRef = if (notification.record is RecordRef) {
+        val recordRef = if (notification.record is EntityRef) {
             notification.record
         } else {
-            RecordRef.valueOf(recordsService.getAtt(notification.record, "?id").asText())
+            EntityRef.valueOf(recordsService.getAtt(notification.record, "?id").asText())
         }
 
         val command = SendNotificationCommand(
@@ -56,7 +56,7 @@ class NotificationServiceImpl(
     }
 
     private fun fillModel(notification: Notification): Map<String, Any> {
-        if (notification.templateRef == RecordRef.EMPTY) {
+        if (notification.templateRef == EntityRef.EMPTY) {
             return emptyMap()
         }
 

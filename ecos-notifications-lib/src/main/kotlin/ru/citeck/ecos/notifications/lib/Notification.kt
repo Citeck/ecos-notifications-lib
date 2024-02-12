@@ -1,7 +1,7 @@
 package ru.citeck.ecos.notifications.lib
 
 import org.apache.commons.lang3.LocaleUtils
-import ru.citeck.ecos.records2.RecordRef
+import ru.citeck.ecos.webapp.api.entity.EntityRef
 import java.util.*
 
 data class Notification(
@@ -9,7 +9,7 @@ data class Notification(
     val record: Any?,
     val title: String = "",
     val body: String = "",
-    val templateRef: RecordRef,
+    val templateRef: EntityRef,
     val type: NotificationType,
     val recipients: Set<String>,
     val from: String? = null,
@@ -25,7 +25,7 @@ data class Notification(
         private var record: Any? = null
         private var title: String = ""
         private var body: String = ""
-        private var templateRef: RecordRef = RecordRef.EMPTY
+        private var templateRef: EntityRef = EntityRef.EMPTY
         private var type: NotificationType = NotificationType.EMAIL_NOTIFICATION
         private var recipients: MutableSet<String> = mutableSetOf()
         private var from: String? = null
@@ -39,7 +39,7 @@ data class Notification(
 
         fun title(title: String) = apply { this.title = title }
         fun body(body: String) = apply { this.body = body }
-        fun templateRef(templateRef: RecordRef) = apply { this.templateRef = templateRef }
+        fun templateRef(templateRef: EntityRef) = apply { this.templateRef = templateRef }
 
         fun notificationType(type: NotificationType) = apply { this.type = type }
 
@@ -66,7 +66,7 @@ data class Notification(
 
         fun build() = let {
 
-            if (body.isBlank() && RecordRef.EMPTY == templateRef) {
+            if (body.isBlank() && EntityRef.EMPTY == templateRef) {
                 throw BuildNotificationException("TemplateRef is mandatory parameter with empty body")
             }
             if (id.isNullOrBlank()) id = UUID.randomUUID().toString()

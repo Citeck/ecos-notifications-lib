@@ -19,17 +19,20 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
 
-        <junit.version>5.4.0</junit.version>
         <slf4j.version>1.7.28</slf4j.version>
         <kotlin.version>1.6.21</kotlin.version>
         <kotlin.logging.version>1.12.5</kotlin.logging.version>
 
         <ecos.jackson.version>2.10.4.3</ecos.jackson.version>
-        <ecos.commands.version>2.7.2</ecos.commands.version>
-        <ecos.commons.version>2.6.7</ecos.commons.version>
-        <ecos.records.version>3.47.6</ecos.records.version>
+        <ecos.commands.version>2.10.0</ecos.commands.version>
+        <ecos.commons.version>2.16.3</ecos.commons.version>
+        <ecos.records.version>3.69.0</ecos.records.version>
+        <ecos.micrometer.version>1.1.0</ecos.micrometer.version>
+        <ecos.webapp-api.version>1.10.1</ecos.webapp-api.version>
 
         <groovy.version>2.5.9</groovy.version>
+
+        <ecos-test-commons.version>1.7.0</ecos-test-commons.version>
 
     </properties>
 
@@ -53,6 +56,20 @@
             <groupId>ru.citeck.ecos.commons</groupId>
             <artifactId>ecos-commons</artifactId>
             <version>${ecos.commons.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.citeck.ecos.webapp</groupId>
+            <artifactId>ecos-webapp-api</artifactId>
+            <version>${ecos.webapp-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.citeck.ecos.micrometer</groupId>
+            <artifactId>ecos-micrometer</artifactId>
+            <version>${ecos.micrometer.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -128,33 +145,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit5</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.jupiter</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>ru.citeck.ecos</groupId>
             <artifactId>ecos-commands-rabbit</artifactId>
             <version>${ecos.commands.version}</version>
@@ -162,9 +152,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.16.1</version>
+            <groupId>ru.citeck.ecos.test.commons</groupId>
+            <artifactId>ecos-test-commons</artifactId>
+            <version>${ecos-test-commons.version}</version>
             <scope>test</scope>
         </dependency>
 
