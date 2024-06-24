@@ -13,6 +13,7 @@ data class SendNotificationCommand(
     val templateRef: EntityRef,
     val type: NotificationType,
     val lang: String,
+    val webUrl: String = "",
     val recipients: Set<String>,
     val from: String,
     val cc: Set<String> = emptySet(),

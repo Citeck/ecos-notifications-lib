@@ -12,7 +12,7 @@
 
     <properties>
 
-        <revision>2.8.0</revision>
+        <revision>2.9.0</revision>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -24,15 +24,15 @@
         <kotlin.logging.version>1.12.5</kotlin.logging.version>
 
         <ecos.jackson.version>2.10.4.3</ecos.jackson.version>
-        <ecos.commands.version>2.10.0</ecos.commands.version>
-        <ecos.commons.version>2.16.3</ecos.commons.version>
-        <ecos.records.version>3.69.0</ecos.records.version>
-        <ecos.micrometer.version>1.1.0</ecos.micrometer.version>
-        <ecos.webapp-api.version>1.10.1</ecos.webapp-api.version>
+        <ecos.commands.version>2.11.2</ecos.commands.version>
+        <ecos.commons.version>2.17.10</ecos.commons.version>
+        <ecos.records.version>3.70.4</ecos.records.version>
+        <ecos.micrometer.version>1.2.2</ecos.micrometer.version>
+        <ecos.webapp-api.version>1.12.1</ecos.webapp-api.version>
 
         <groovy.version>2.5.9</groovy.version>
 
-        <ecos-test-commons.version>1.7.0</ecos-test-commons.version>
+        <ecos-test-commons.version>1.9.0</ecos-test-commons.version>
 
     </properties>
 
