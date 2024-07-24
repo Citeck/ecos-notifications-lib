@@ -11,6 +11,7 @@ import java.time.Duration
 
 private const val TARGET_APP = "notifications"
 private const val MODEL_DATA = "_data"
+private const val MODEL_ATTACHMENTS = "_attachments"
 
 class NotificationServiceImpl(
     private val commandsService: CommandsService,
@@ -78,6 +79,9 @@ class NotificationServiceImpl(
         }
         notification.additionalMeta[MODEL_DATA]?.let {
             filledModel.putIfAbsent(MODEL_DATA, it)
+        }
+        notification.additionalMeta[MODEL_ATTACHMENTS]?.let {
+            filledModel.putIfAbsent(MODEL_ATTACHMENTS, it)
         }
 
         return filledModel
