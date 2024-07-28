@@ -30,6 +30,7 @@ object CalendarEventUtils {
         uid: String? = null,
         sequence: Int? = null,
         prodId: String? = null,
+        method: Method = Method.REQUEST
     ): CalendarEventAttachment {
         val timeZoneRegistry = TimeZoneRegistryFactory.getInstance().createRegistry()
         val timeZone = timeZoneRegistry.getTimeZone(TimeZones.UTC_ID)
@@ -59,6 +60,12 @@ object CalendarEventUtils {
         }
         event.withProperty(propertySequence)
 
+        if (method == Method.CANCEL) {
+            event.withProperty(Status.VEVENT_CANCELLED)
+        } else {
+            event.withProperty(Status.VEVENT_CONFIRMED)
+        }
+
         event.withProperty(Organizer(URI.create("mailto:$organizer")))
         event.withProperty(
             Attendee(URI.create("mailto:$organizer"))
@@ -81,6 +88,7 @@ object CalendarEventUtils {
         val calendarEvent = Calendar()
             .withProdId(prodId ?: DEFAULT_PROD_ID)
             .withDefaults()
+            .withProperty(method)
             .withComponent(timeZone.vTimeZone)
             .withComponent(event)
             .fluentTarget
