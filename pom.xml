@@ -10,29 +10,24 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
+    <parent>
+        <groupId>ru.citeck.lib.commons</groupId>
+        <artifactId>citeck-lib-base-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
     <properties>
 
-        <revision>2.9.0</revision>
+        <revision>2.10.0</revision>
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <ecos.commands.version>2.12.0</ecos.commands.version>
+        <ecos.commons.version>3.3.0</ecos.commons.version>
+        <ecos.records.version>3.71.0</ecos.records.version>
 
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <groovy.version>4.0.22</groovy.version>
+        <commons-lang3.version>3.15.0</commons-lang3.version>
 
-        <slf4j.version>1.7.28</slf4j.version>
-        <kotlin.version>1.7.10</kotlin.version>
-        <kotlin.logging.version>1.12.5</kotlin.logging.version>
-
-        <ecos.jackson.version>2.10.4.3</ecos.jackson.version>
-        <ecos.commands.version>2.11.2</ecos.commands.version>
-        <ecos.commons.version>2.17.10</ecos.commons.version>
-        <ecos.records.version>3.70.4</ecos.records.version>
-        <ecos.micrometer.version>1.2.2</ecos.micrometer.version>
-        <ecos.webapp-api.version>1.12.1</ecos.webapp-api.version>
-
-        <groovy.version>2.5.9</groovy.version>
-
-        <ecos-test-commons.version>1.9.0</ecos-test-commons.version>
+        <ecos-test-commons.version>1.10.0</ecos-test-commons.version>
 
     </properties>
 
@@ -60,70 +55,14 @@
         </dependency>
 
         <dependency>
-            <groupId>ru.citeck.ecos.webapp</groupId>
-            <artifactId>ecos-webapp-api</artifactId>
-            <version>${ecos.webapp-api.version}</version>
+            <groupId>ru.citeck.ecos.commons</groupId>
+            <artifactId>ecos-commons-deps</artifactId>
+            <version>${ecos.commons.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>ru.citeck.ecos.micrometer</groupId>
-            <artifactId>ecos-micrometer</artifactId>
-            <version>${ecos.micrometer.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ru.citeck.ecos</groupId>
-            <artifactId>ecos-jackson</artifactId>
-            <version>${ecos.jackson.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.8.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.microutils</groupId>
-            <artifactId>kotlin-logging</artifactId>
-            <version>${kotlin.logging.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
+            <groupId>org.apache.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovy.version}</version>
             <type>pom</type>
@@ -158,6 +97,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -165,161 +111,20 @@
         <plugins>
 
             <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.2.7</version>
-                <configuration>
-                    <updatePomFile>true</updatePomFile>
-                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
         </plugins>
-
-        <pluginManagement>
-
-            <plugins>
-
-                <plugin>
-                    <groupId>com.github.gantsign.maven</groupId>
-                    <artifactId>ktlint-maven-plugin</artifactId>
-                    <version>1.13.1</version>
-                    <executions>
-                        <execution>
-                            <id>format</id>
-                            <goals>
-                                <goal>format</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-maven-plugin</artifactId>
-                    <version>${kotlin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>compile</id>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>test-compile</id>
-                            <phase>test-compile</phase>
-                            <goals>
-                                <goal>test-compile</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <jvmTarget>1.8</jvmTarget>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>build-helper-maven-plugin</artifactId>
-                    <executions>
-                        <execution>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>add-source</goal>
-                            </goals>
-                            <configuration>
-                                <sources>
-                                    <source>${basedir}/src/main/java</source>
-                                    <source>${basedir}/src/main/kotlin</source>
-                                </sources>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>test-compile</id>
-                            <phase>test-compile</phase>
-                            <goals>
-                                <goal>add-test-source</goal>
-                            </goals>
-                            <configuration>
-                                <sources>
-                                    <source>${basedir}/src/test/java</source>
-                                    <source>${basedir}/src/test/kotlin</source>
-                                </sources>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M4</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-
-            </plugins>
-
-        </pluginManagement>
 
     </build>
 
     <modules>
         <module>ecos-notifications-lib</module>
     </modules>
-
-    <repositories>
-        <repository>
-            <id>citeck-public</id>
-            <url>http://nexus.citeck.ru/repository/maven-public</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>citeck-plugin-public</id>
-            <url>http://nexus.citeck.ru/repository/maven-public</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>citeck-community-releases</id>
-            <url>${community.releases.distr.url}</url>
-        </repository>
-        <snapshotRepository>
-            <id>citeck-community-snapshots</id>
-            <url>${community.snapshots.distr.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>

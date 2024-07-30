@@ -19,7 +19,7 @@ class NotificationServiceImpl(
     private val properties: NotificationsProperties
 ) : NotificationService {
 
-    private val recordsService = recordsServiceFactory.recordsServiceV1
+    private val recordsService = recordsServiceFactory.recordsService
 
     override fun send(notification: Notification) {
 
