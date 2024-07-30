@@ -12,7 +12,7 @@
 
     <properties>
 
-        <revision>2.10.0_j8</revision>
+        <revision>2.11.0_j8</revision>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -84,6 +84,13 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
+            <version>3.2.19</version>
             <scope>provided</scope>
         </dependency>
 
