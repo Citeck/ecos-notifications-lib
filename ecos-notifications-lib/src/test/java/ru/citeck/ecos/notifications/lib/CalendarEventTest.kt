@@ -37,7 +37,7 @@ class CalendarEventTest {
             .build()
         var calendarEventAttachment = calendarEvent.createAttachment()
 
-        var resource = "test/icalendar/invite.ics.bin"
+        var resource = "test/icalendar/invite.ics"
         var inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
             .readText(StandardCharsets.UTF_8)
         var decodeCalendarEvent = Base64.getMimeDecoder().decode(calendarEventAttachment.bytes)
@@ -56,7 +56,7 @@ class CalendarEventTest {
             .build()
         calendarEventAttachment = cancelCalendarEvent.createAttachment()
 
-        resource = "test/icalendar/cancel_invite.ics.bin"
+        resource = "test/icalendar/cancel_invite.ics"
         inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
             .readText(StandardCharsets.UTF_8)
         decodeCalendarEvent = Base64.getMimeDecoder().decode(calendarEventAttachment.bytes)
