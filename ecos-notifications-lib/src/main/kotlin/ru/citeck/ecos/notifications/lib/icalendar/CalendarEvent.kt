@@ -20,11 +20,11 @@ class CalendarEvent(
     private val prodId: String,
     private val method: Method,
     private val summary: String,
-    private val description: String,
+    private val description: String?,
     private val startDate: Instant,
     private val durationInMillis: Long,
-    private val organizer: String,
-    private val attendees: List<String>,
+    private val organizer: String?,
+    private val attendees: Set<String>,
     private val createDate: Instant?
 ) {
     companion object {
@@ -51,8 +51,9 @@ class CalendarEvent(
             val dtStamp = event.getProperty<DtStamp>(Property.DTSTAMP)
             dtStamp.dateTime = DateTime(it.toEpochMilli())
         }
-
-        event.withProperty(Description(description))
+        description?.let {
+            event.withProperty(Description(it))
+        }
 
         event.withProperty(Uid(uid))
         event.withProperty(Sequence(sequence))
@@ -63,14 +64,16 @@ class CalendarEvent(
             event.withProperty(Status.VEVENT_CONFIRMED)
         }
 
-        event.withProperty(Organizer(URI.create("mailto:$organizer")))
-        event.withProperty(
-            Attendee(URI.create("mailto:$organizer"))
-                .withParameter(PartStat.ACCEPTED)
-                .withParameter(Cn(organizer))
-                .withParameter(Role.REQ_PARTICIPANT)
-                .getFluentTarget()
-        )
+        organizer?.let {
+            event.withProperty(Organizer(URI.create("mailto:$organizer")))
+            event.withProperty(
+                Attendee(URI.create("mailto:$organizer"))
+                    .withParameter(PartStat.ACCEPTED)
+                    .withParameter(Cn(organizer))
+                    .withParameter(Role.REQ_PARTICIPANT)
+                    .getFluentTarget()
+            )
+        }
 
         for (attendee in attendees) {
             event.withProperty(
@@ -97,22 +100,29 @@ class CalendarEvent(
 
     class Builder(
         private val summary: String,
-        private val description: String,
-        private val start: Instant,
-        private val durationInMillis: Long,
-        private val organizer: String,
-        private val attendees: List<String>
+        private val startDate: Instant
     ) {
         private var uid: String? = null
         private var sequence: Int = 0
         private var prodId: String = DEFAULT_PROD_ID
         private var method: Method = Method.REQUEST
+        private var description: String? = null
+        private var durationInMillis: Long = 0L
+        private var organizer: String? = null
+        private var attendees: MutableSet<String> = mutableSetOf()
         private var createDate: Instant? = null
 
         fun uid(uid: String) = apply { this.uid = uid }
         fun sequence(sequence: Int) = apply { this.sequence = sequence }
         fun prodId(prodId: String) = apply { this.prodId = prodId }
         fun method(method: Method) = apply { this.method = method }
+        fun description(description: String) = apply { this.description = description }
+        fun durationInMillis(durationInMillis: Long) = apply { this.durationInMillis = durationInMillis }
+        fun organizer(organizer: String) = apply { this.organizer = organizer }
+
+        fun attendees(attendees: Collection<String>) = apply { this.attendees = attendees.toMutableSet() }
+        fun addAttendee(attendee: String) = apply { this.attendees.add(attendee) }
+
         fun createDate(createDate: Instant) = apply { this.createDate = createDate }
 
         fun build() = let {
@@ -125,7 +135,7 @@ class CalendarEvent(
                 method,
                 summary,
                 description,
-                start,
+                startDate,
                 durationInMillis,
                 organizer,
                 attendees,

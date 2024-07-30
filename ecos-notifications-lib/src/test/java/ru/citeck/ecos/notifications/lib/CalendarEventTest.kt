@@ -26,16 +26,14 @@ class CalendarEventTest {
         var sequence = 0
         val createDate = Instant.parse("2024-07-29T00:00:00Z")
 
-        val calendarEvent = CalendarEvent.Builder(
-            eventSummary,
-            eventDescription,
-            eventStartDate,
-            eventDuration,
-            eventOrganizer,
-            eventAttendees
-        ).uid(eventUid)
+        val calendarEvent = CalendarEvent.Builder(eventSummary, eventStartDate)
+            .uid(eventUid)
             .sequence(sequence)
             .createDate(createDate)
+            .description(eventDescription)
+            .durationInMillis(eventDuration)
+            .organizer(eventOrganizer)
+            .attendees(eventAttendees)
             .build()
         var calendarEventAttachment = calendarEvent.createAttachment()
 
@@ -46,16 +44,14 @@ class CalendarEventTest {
         assertEquals(inviteText, decodeCalendarEvent.decodeToString())
 
         sequence += 1
-        val cancelCalendarEvent = CalendarEvent.Builder(
-            eventSummary,
-            eventDescription,
-            eventStartDate,
-            eventDuration,
-            eventOrganizer,
-            eventAttendees
-        ).uid(eventUid)
+        val cancelCalendarEvent = CalendarEvent.Builder(eventSummary, eventStartDate)
+            .uid(eventUid)
             .sequence(sequence)
             .createDate(createDate)
+            .description(eventDescription)
+            .durationInMillis(eventDuration)
+            .organizer(eventOrganizer)
+            .attendees(eventAttendees)
             .method(Method.CANCEL)
             .build()
         calendarEventAttachment = cancelCalendarEvent.createAttachment()
