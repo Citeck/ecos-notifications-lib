@@ -3,6 +3,7 @@ package ru.citeck.ecos.notifications.lib.icalendar
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.DateTime
 import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.TimeZone
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.parameter.Cn
@@ -25,7 +26,8 @@ class CalendarEvent(
     private val durationInMillis: Long,
     private val organizer: String?,
     private val attendees: Set<String>,
-    private val createDate: Instant?
+    private val createDate: Instant?,
+    private val timeZone: TimeZone
 ) {
     companion object {
         private const val FILE_NAME = "invite.ics"
@@ -35,8 +37,6 @@ class CalendarEvent(
     }
 
     fun createAttachment(): CalendarEventAttachment {
-        val timeZoneRegistry = TimeZoneRegistryFactory.getInstance().createRegistry()
-        val timeZone = timeZoneRegistry.getTimeZone(TimeZones.UTC_ID)
 
         val end = startDate.plusMillis(durationInMillis)
 
@@ -111,6 +111,7 @@ class CalendarEvent(
         private var organizer: String? = null
         private var attendees: MutableSet<String> = mutableSetOf()
         private var createDate: Instant? = null
+        private var timeZone: TimeZone = initTimeZone()
 
         fun uid(uid: String) = apply { this.uid = uid }
         fun sequence(sequence: Int) = apply { this.sequence = sequence }
@@ -124,6 +125,12 @@ class CalendarEvent(
         fun addAttendee(attendee: String) = apply { this.attendees.add(attendee) }
 
         fun createDate(createDate: Instant) = apply { this.createDate = createDate }
+        fun timeZone(timeZone: TimeZone) = apply { this.timeZone = timeZone }
+
+        private fun initTimeZone(): TimeZone {
+            val timeZoneRegistry = TimeZoneRegistryFactory.getInstance().createRegistry()
+            return timeZoneRegistry.getTimeZone(TimeZones.UTC_ID)
+        }
 
         fun build() = let {
             if (uid.isNullOrBlank()) uid = UUID.randomUUID().toString()
@@ -139,7 +146,8 @@ class CalendarEvent(
                 durationInMillis,
                 organizer,
                 attendees,
-                createDate
+                createDate,
+                timeZone
             )
         }
     }

@@ -1,5 +1,6 @@
 package ru.citeck.ecos.notifications.lib
 
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import net.fortuna.ical4j.model.property.Method
 import org.junit.jupiter.api.Test
 import ru.citeck.ecos.commons.utils.resource.ResourceUtils
@@ -57,6 +58,30 @@ class CalendarEventTest {
         calendarEventAttachment = cancelCalendarEvent.createAttachment()
 
         resource = "test/icalendar/cancel_invite.ics"
+        inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
+            .readText(StandardCharsets.UTF_8)
+        decodeCalendarEvent = Base64.getMimeDecoder().decode(calendarEventAttachment.bytes)
+        assertEquals(inviteText, decodeCalendarEvent.decodeToString())
+
+        sequence = 2
+        val createDateGMT4 = Instant.parse("2024-07-29T00:00:00Z")
+
+        val timeZoneRegistry = TimeZoneRegistryFactory.getInstance().createRegistry()
+        val timeZone = timeZoneRegistry.getTimeZone("Etc/GMT+7")
+
+        val calendarEventGMT4 = CalendarEvent.Builder(eventSummary, eventStartDate)
+            .uid(eventUid)
+            .sequence(sequence)
+            .createDate(createDateGMT4)
+            .timeZone(timeZone)
+            .description(eventDescription)
+            .durationInMillis(eventDuration)
+            .organizer(eventOrganizer)
+            .attendees(eventAttendees)
+            .build()
+        calendarEventAttachment = calendarEventGMT4.createAttachment()
+
+        resource = "test/icalendar/invite_GMT_7.ics"
         inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
             .readText(StandardCharsets.UTF_8)
         decodeCalendarEvent = Base64.getMimeDecoder().decode(calendarEventAttachment.bytes)
