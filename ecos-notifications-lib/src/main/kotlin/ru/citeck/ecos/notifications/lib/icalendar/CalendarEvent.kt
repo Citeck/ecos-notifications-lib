@@ -111,7 +111,7 @@ class CalendarEvent(
         private var organizer: String? = null
         private var attendees: MutableSet<String> = mutableSetOf()
         private var createDate: Instant? = null
-        private var timeZone: TimeZone = initTimeZone()
+        private var timeZone: TimeZone? = null
 
         fun uid(uid: String) = apply { this.uid = uid }
         fun sequence(sequence: Int) = apply { this.sequence = sequence }
@@ -127,7 +127,7 @@ class CalendarEvent(
         fun createDate(createDate: Instant) = apply { this.createDate = createDate }
         fun timeZone(timeZone: TimeZone) = apply { this.timeZone = timeZone }
 
-        private fun initTimeZone(): TimeZone {
+        private fun initDefaultTimeZone(): TimeZone {
             val timeZoneRegistry = TimeZoneRegistryFactory.getInstance().createRegistry()
             return timeZoneRegistry.getTimeZone(TimeZones.UTC_ID)
         }
@@ -147,7 +147,7 @@ class CalendarEvent(
                 organizer,
                 attendees,
                 createDate,
-                timeZone
+                timeZone ?: initDefaultTimeZone()
             )
         }
     }

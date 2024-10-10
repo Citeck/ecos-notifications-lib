@@ -64,22 +64,22 @@ class CalendarEventTest {
         assertEquals(inviteText, decodeCalendarEvent.decodeToString())
 
         sequence = 2
-        val createDateGMT4 = Instant.parse("2024-07-29T00:00:00Z")
+        val createDateGMT7 = Instant.parse("2024-07-29T00:00:00Z")
 
         val timeZoneRegistry = TimeZoneRegistryFactory.getInstance().createRegistry()
         val timeZone = timeZoneRegistry.getTimeZone("Etc/GMT+7")
 
-        val calendarEventGMT4 = CalendarEvent.Builder(eventSummary, eventStartDate)
+        val calendarEventGMT7 = CalendarEvent.Builder(eventSummary, eventStartDate)
             .uid(eventUid)
             .sequence(sequence)
-            .createDate(createDateGMT4)
+            .createDate(createDateGMT7)
             .timeZone(timeZone)
             .description(eventDescription)
             .durationInMillis(eventDuration)
             .organizer(eventOrganizer)
             .attendees(eventAttendees)
             .build()
-        calendarEventAttachment = calendarEventGMT4.createAttachment()
+        calendarEventAttachment = calendarEventGMT7.createAttachment()
 
         resource = "test/icalendar/invite_GMT_7.ics"
         inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
