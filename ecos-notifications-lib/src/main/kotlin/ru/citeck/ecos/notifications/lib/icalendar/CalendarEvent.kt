@@ -125,7 +125,7 @@ class CalendarEvent(
         fun addAttendee(attendee: String) = apply { this.attendees.add(attendee) }
 
         fun createDate(createDate: Instant) = apply { this.createDate = createDate }
-        fun timeZone(timeZone: TimeZone) = apply { this.timeZone = timeZone }
+        fun timeZone(timeZone: TimeZone?) = apply { this.timeZone = timeZone }
 
         private fun initDefaultTimeZone(): TimeZone {
             val timeZoneRegistry = TimeZoneRegistryFactory.getInstance().createRegistry()
