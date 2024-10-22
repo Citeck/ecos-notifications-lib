@@ -121,7 +121,6 @@ class NotificationServiceTest : NotificationServiceTestBase() {
             expectedModel["text|presuf('','-sub-cond-template-0')"] = record.text + "-sub-cond-template-0"
         }
         assertThat(receivedCommands[0].model).containsExactlyInAnyOrderEntriesOf(expectedModel)
-
     }
 
     data class TestParams(
@@ -182,8 +181,5 @@ class NotificationServiceTest : NotificationServiceTestBase() {
             expectedModel["text|presuf('','-sub-template-1')"] = record.text + "-sub-template-1"
         }
         assertThat(receivedCommands[0].model).containsExactlyInAnyOrderEntriesOf(expectedModel)
-
     }
-
-
 }

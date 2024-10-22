@@ -1,7 +1,7 @@
 package ru.citeck.ecos.notifications.lib.api
 
-import ecos.com.fasterxml.jackson210.annotation.JsonSubTypes
-import ecos.com.fasterxml.jackson210.annotation.JsonTypeInfo
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import ru.citeck.ecos.commons.data.DataValue
 import ru.citeck.ecos.records2.predicate.model.Predicate
 import ru.citeck.ecos.webapp.api.entity.EntityRef
@@ -18,7 +18,7 @@ import ru.citeck.ecos.webapp.api.entity.EntityRef
 )
 sealed class GetTemplateDataRes
 
-object GetTemplateDataNoRes : GetTemplateDataRes()
+data object GetTemplateDataNoRes : GetTemplateDataRes()
 
 data class GetTemplateDataTemplateVariants(
     /**

@@ -1,5 +1,6 @@
 package ru.citeck.ecos.notifications.lib.service
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import ru.citeck.ecos.commands.CommandsService
 import ru.citeck.ecos.commons.data.DataValue
 import ru.citeck.ecos.commons.data.ObjectData
@@ -37,7 +38,7 @@ class NotificationServiceImpl(
         private val log = KotlinLogging.logger {}
     }
 
-    private val recordsService = recordsServiceFactory.recordsServiceV1
+    private val recordsService = recordsServiceFactory.recordsService
     private val predicateService = recordsServiceFactory.predicateService
     private val notificationsAppFallbackApi = NotificationsAppRecordsApi(recordsService)
 

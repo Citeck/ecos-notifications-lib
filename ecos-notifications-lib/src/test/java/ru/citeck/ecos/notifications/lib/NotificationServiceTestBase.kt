@@ -1,7 +1,6 @@
 package ru.citeck.ecos.notifications.lib
 
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import ru.citeck.ecos.commands.CommandExecutor
 import ru.citeck.ecos.commands.CommandsServiceFactory
 import ru.citeck.ecos.commons.data.DataValue
@@ -65,8 +64,8 @@ abstract class NotificationServiceTestBase {
                     val variants = ArrayList<GetTemplateDataTemplateVariants.Variant>()
                     for (multiTemplate in template.multiTemplateConfig) {
                         if (multiTemplate.type == type) {
-                            if (variants.isEmpty()
-                                && PredicateUtils.isAlwaysTrue(multiTemplate.condition ?: Predicates.alwaysTrue())
+                            if (variants.isEmpty() &&
+                                PredicateUtils.isAlwaysTrue(multiTemplate.condition ?: Predicates.alwaysTrue())
                             ) {
                                 return getExactTemplateData(template, templates[multiTemplate.template.getLocalId()]!!)
                             } else {
@@ -112,7 +111,7 @@ abstract class NotificationServiceTestBase {
         }
 
         if (legacyApi) {
-            records.recordsServiceV1.register(object : RecordAttsDao {
+            records.recordsService.register(object : RecordAttsDao {
                 override fun getId(): String {
                     return "template"
                 }
@@ -123,7 +122,7 @@ abstract class NotificationServiceTestBase {
             })
         }
 
-        records.recordsServiceV1.register(object : RecordAttsDao {
+        records.recordsService.register(object : RecordAttsDao {
             override fun getId(): String {
                 return "test"
             }
