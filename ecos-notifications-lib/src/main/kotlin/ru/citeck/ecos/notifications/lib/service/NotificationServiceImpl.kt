@@ -81,7 +81,11 @@ class NotificationServiceImpl(
     private fun fillModel(recordRef: EntityRef, notification: Notification): TemplateWithModelData {
 
         if (notification.templateRef == EntityRef.EMPTY) {
-            return TemplateWithModelData(EntityRef.EMPTY, false, emptyMap(), emptyList())
+            val requiredAttsValues = mutableMapOf<String, Any?>()
+            notification.additionalMeta[MODEL_ATTACHMENTS]?.let {
+                requiredAttsValues.putIfAbsent(MODEL_ATTACHMENTS, it)
+            }
+            return TemplateWithModelData(EntityRef.EMPTY, false, requiredAttsValues, emptyList())
         }
 
         log.debug { "Fill model for record $recordRef and template ${notification.templateRef}" }
