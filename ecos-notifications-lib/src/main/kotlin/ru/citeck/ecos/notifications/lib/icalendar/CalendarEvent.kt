@@ -98,7 +98,6 @@ class CalendarEvent(
             .fluentTarget
 
         val calendarEventStr = calendarEvent.toString()
-        println(calendarEventStr)
         val base64CalendarEvent = Base64.getMimeEncoder().encode(calendarEventStr.encodeToByteArray())
         return CalendarEventAttachment(bytes = base64CalendarEvent.decodeToString())
     }
