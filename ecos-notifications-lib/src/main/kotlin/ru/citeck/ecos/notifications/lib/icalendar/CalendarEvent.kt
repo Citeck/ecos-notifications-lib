@@ -1,10 +1,8 @@
 package ru.citeck.ecos.notifications.lib.icalendar
 
+import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.Calendar
-import net.fortuna.ical4j.model.DateTime
-import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.TimeZone
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.parameter.Cn
 import net.fortuna.ical4j.model.parameter.PartStat
@@ -57,31 +55,37 @@ class CalendarEvent(
 
         event.withProperty(Uid(uid))
         event.withProperty(Sequence(sequence))
+        event.withProperty(Status.VEVENT_CONFIRMED)
 
-        if (method == Method.CANCEL) {
-            event.withProperty(Status.VEVENT_CANCELLED)
-        } else {
-            event.withProperty(Status.VEVENT_CONFIRMED)
+        if (Method.CANCEL != method) {
+            organizer?.let {
+                event.withProperty(Organizer(URI.create("mailto:$organizer")))
+                event.withProperty(
+                    Attendee(URI.create("mailto:$organizer"))
+                        .withParameter(Cn(organizer))
+                        .withParameter(Role.REQ_PARTICIPANT)
+                        .withParameter(PartStat.ACCEPTED)
+                        .getFluentTarget()
+                )
+            }
         }
 
-        organizer?.let {
-            event.withProperty(Organizer(URI.create("mailto:$organizer")))
-            event.withProperty(
-                Attendee(URI.create("mailto:$organizer"))
-                    .withParameter(PartStat.ACCEPTED)
-                    .withParameter(Cn(organizer))
-                    .withParameter(Role.REQ_PARTICIPANT)
-                    .getFluentTarget()
-            )
-        }
+        for (email in attendees) {
+            if (email == organizer) {
+                continue
+            }
 
-        for (attendee in attendees) {
+            val attendee = Attendee(URI.create("mailto:$email"))
+                .withParameter(Cn(email))
+                .withParameter(Role.REQ_PARTICIPANT)
+            if (Method.CANCEL == method) {
+                attendee.withParameter(PartStat.DECLINED)
+            } else {
+                attendee.withParameter(PartStat.NEEDS_ACTION)
+            }
+
             event.withProperty(
-                Attendee(URI.create("mailto:$attendee"))
-                    .withParameter(PartStat.NEEDS_ACTION)
-                    .withParameter(Cn(attendee))
-                    .withParameter(Role.REQ_PARTICIPANT)
-                    .getFluentTarget()
+                attendee.getFluentTarget()
             )
         }
 
