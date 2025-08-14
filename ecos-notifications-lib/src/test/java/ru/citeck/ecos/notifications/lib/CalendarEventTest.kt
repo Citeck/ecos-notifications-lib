@@ -42,7 +42,10 @@ class CalendarEventTest {
         var inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
             .readText(StandardCharsets.UTF_8)
         var decodeCalendarEvent = Base64.getMimeDecoder().decode(calendarEventAttachment.bytes)
-        assertEquals(inviteText, decodeCalendarEvent.decodeToString())
+        assertEquals(
+            normalizeCalendarText(inviteText),
+            normalizeCalendarText(decodeCalendarEvent.decodeToString())
+        )
 
         sequence += 1
         val cancelCalendarEvent = CalendarEvent.Builder(eventSummary, eventStartDate)
@@ -61,7 +64,10 @@ class CalendarEventTest {
         inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
             .readText(StandardCharsets.UTF_8)
         decodeCalendarEvent = Base64.getMimeDecoder().decode(calendarEventAttachment.bytes)
-        assertEquals(inviteText, decodeCalendarEvent.decodeToString())
+        assertEquals(
+            normalizeCalendarText(inviteText),
+            normalizeCalendarText(decodeCalendarEvent.decodeToString())
+        )
 
         sequence = 2
         val createDateGMT7 = Instant.parse("2024-07-29T00:00:00Z")
@@ -85,6 +91,15 @@ class CalendarEventTest {
         inviteText = ResourceUtils.getFile("${ResourceUtils.CLASSPATH_URL_PREFIX}$resource")
             .readText(StandardCharsets.UTF_8)
         decodeCalendarEvent = Base64.getMimeDecoder().decode(calendarEventAttachment.bytes)
-        assertEquals(inviteText, decodeCalendarEvent.decodeToString())
+        assertEquals(
+            normalizeCalendarText(inviteText),
+            normalizeCalendarText(decodeCalendarEvent.decodeToString())
+        )
     }
+
+    private fun normalizeCalendarText(text: String): String {
+        // Remove dynamic LAST-MODIFIED field from VTIMEZONE as it changes with timezone data updates
+        return text.replace(Regex("LAST-MODIFIED:\\d{8}T\\d{6}Z"), "LAST-MODIFIED:NORMALIZED")
+    }
+
 }
