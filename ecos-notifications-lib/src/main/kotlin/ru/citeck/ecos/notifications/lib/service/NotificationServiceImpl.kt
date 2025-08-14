@@ -1,13 +1,16 @@
 package ru.citeck.ecos.notifications.lib.service
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import ru.citeck.ecos.commands.CommandsService
 import ru.citeck.ecos.commons.data.DataValue
 import ru.citeck.ecos.commons.data.ObjectData
+import ru.citeck.ecos.commons.json.Json
 import ru.citeck.ecos.notifications.lib.Notification
 import ru.citeck.ecos.notifications.lib.NotificationsProperties
 import ru.citeck.ecos.notifications.lib.api.*
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
+import ru.citeck.ecos.notifications.lib.command.SendNotificationResult
 import ru.citeck.ecos.records2.predicate.PredicateUtils
 import ru.citeck.ecos.records2.predicate.element.Element
 import ru.citeck.ecos.records2.predicate.element.elematts.ElementAttributes
@@ -17,7 +20,7 @@ import ru.citeck.ecos.records3.record.request.RequestContext
 import ru.citeck.ecos.webapp.api.entity.EntityRef
 import java.time.Duration
 
-private const val TARGET_APP = "notifications"
+private const val NOTIFICATIONS_APP = "notifications"
 private const val MODEL_DATA = "_data"
 private const val MODEL_ATTACHMENTS = "_attachments"
 
@@ -43,7 +46,29 @@ class NotificationServiceImpl(
     private val notificationsAppFallbackApi = NotificationsAppRecordsApi(recordsService)
 
     override fun send(notification: Notification) {
+        val command = prepareNotificationCommand(notification)
 
+        commandsService.execute {
+            this.ttl = Duration.ZERO
+            this.targetApp = NOTIFICATIONS_APP
+            this.body = command
+        }
+    }
+
+    override fun sendSync(notification: Notification): SendNotificationResult {
+        val command = prepareNotificationCommand(notification)
+
+        val commandResult: JsonNode = commandsService.executeSync {
+            this.ttl = Duration.ZERO
+            this.targetApp = NOTIFICATIONS_APP
+            this.body = command
+        }.result
+
+        return Json.mapper.convert(commandResult, SendNotificationResult::class.java)
+            ?: error("Failed to convert command result to SendNotificationResult: $commandResult")
+    }
+
+    private fun prepareNotificationCommand(notification: Notification): SendNotificationCommand {
         val recordRef = if (notification.record is EntityRef) {
             notification.record
         } else {
@@ -54,7 +79,7 @@ class NotificationServiceImpl(
         val locale = notification.lang ?: properties.defaultLocale
         val from = notification.from ?: properties.defaultFrom
 
-        val command = SendNotificationCommand(
+        return SendNotificationCommand(
             id = notification.id,
             record = recordRef,
             title = notification.title,
@@ -70,12 +95,6 @@ class NotificationServiceImpl(
             bcc = notification.bcc,
             model = templateWithModel.modelData
         )
-
-        commandsService.execute {
-            this.ttl = Duration.ZERO
-            this.targetApp = TARGET_APP
-            this.body = command
-        }
     }
 
     private fun fillModel(recordRef: EntityRef, notification: Notification): TemplateWithModelData {
@@ -144,6 +163,7 @@ class NotificationServiceImpl(
             return "Data: $templateData selected template: $selectedTemplate " +
                 "base template ${notification.templateRef} record: $recordRef"
         }
+
         val templatesPath = LinkedHashSet<EntityRef>()
         if (templateData is GetTemplateDataExactTemplate && templateData.templateRef != selectedTemplate) {
             templatesPath.add(selectedTemplate)
