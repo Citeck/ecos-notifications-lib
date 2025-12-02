@@ -42,7 +42,7 @@ class NotificationServiceTest : NotificationServiceTestBase() {
                 if (legacyApi) {
                     "_etype?id" to "emodel/type@${record.typeId}"
                 } else {
-                    "_type?id" to "emodel/type@${record.typeId}"
+                    NotificationConstants.TYPE_ATT to "emodel/type@${record.typeId}"
                 },
                 "text|presuf('','-sub-template-0')" to "simple-template-test-sub-template-0"
             )
@@ -72,7 +72,7 @@ class NotificationServiceTest : NotificationServiceTestBase() {
                 if (legacyApi) {
                     "_etype?id" to "emodel/type@${record.typeId}"
                 } else {
-                    "_type?id" to "emodel/type@${record.typeId}"
+                    NotificationConstants.TYPE_ATT to "emodel/type@${record.typeId}"
                 },
                 "text|presuf('','-multi-att')" to "multi-without-match-multi-att"
             )
@@ -109,8 +109,10 @@ class NotificationServiceTest : NotificationServiceTestBase() {
             if (legacyApi) {
                 model["_etype?id"] = "emodel/type@${record.typeId}"
             } else {
-                model["_type?id"] = "emodel/type@${record.typeId}"
+                model[NotificationConstants.TYPE_ATT] = "emodel/type@${record.typeId}"
             }
+            model[NotificationConstants.PROCESS_WORKSPACE_ATT] = null
+            model[NotificationConstants.TYPE_WORKSPACE_ATT] = null
             model["text|presuf('','-multi-att')"] = record.text + "-multi-att"
             return model
         }
@@ -165,8 +167,10 @@ class NotificationServiceTest : NotificationServiceTestBase() {
             if (legacyApi) {
                 model["_etype?id"] = "emodel/type@${record.typeId}"
             } else {
-                model["_type?id"] = "emodel/type@${record.typeId}"
+                model[NotificationConstants.TYPE_ATT] = "emodel/type@${record.typeId}"
             }
+            model[NotificationConstants.PROCESS_WORKSPACE_ATT] = null
+            model[NotificationConstants.TYPE_WORKSPACE_ATT] = null
             model["text|presuf('','-multi-att')"] = record.text + "-multi-att"
             return model
         }

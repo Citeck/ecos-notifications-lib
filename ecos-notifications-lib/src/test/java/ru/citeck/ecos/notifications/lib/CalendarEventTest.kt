@@ -101,5 +101,4 @@ class CalendarEventTest {
         // Remove dynamic LAST-MODIFIED field from VTIMEZONE as it changes with timezone data updates
         return text.replace(Regex("LAST-MODIFIED:\\d{8}T\\d{6}Z"), "LAST-MODIFIED:NORMALIZED")
     }
-
 }

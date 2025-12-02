@@ -7,6 +7,7 @@ import ru.citeck.ecos.commons.data.DataValue
 import ru.citeck.ecos.commons.data.ObjectData
 import ru.citeck.ecos.commons.json.Json
 import ru.citeck.ecos.notifications.lib.Notification
+import ru.citeck.ecos.notifications.lib.NotificationConstants
 import ru.citeck.ecos.notifications.lib.NotificationsProperties
 import ru.citeck.ecos.notifications.lib.api.*
 import ru.citeck.ecos.notifications.lib.command.SendNotificationCommand
@@ -32,10 +33,9 @@ class NotificationServiceImpl(
 ) : NotificationService {
 
     companion object {
-        private const val TYPE_ATT = "_type?id"
         private const val LEGACY_TYPE_ATT = "_etype?id"
         private val NEW_TO_LEGACY_ATTS_MAPPING = mapOf(
-            TYPE_ATT to LEGACY_TYPE_ATT
+            NotificationConstants.TYPE_ATT to LEGACY_TYPE_ATT
         )
 
         private val log = KotlinLogging.logger {}
@@ -98,23 +98,8 @@ class NotificationServiceImpl(
     }
 
     private fun fillModel(recordRef: EntityRef, notification: Notification): TemplateWithModelData {
-
-        if (notification.templateRef == EntityRef.EMPTY) {
-            val requiredAttsValues = mutableMapOf<String, Any?>()
-            notification.additionalMeta[MODEL_ATTACHMENTS]?.let {
-                requiredAttsValues.putIfAbsent(MODEL_ATTACHMENTS, it)
-            }
-            return TemplateWithModelData(EntityRef.EMPTY, false, requiredAttsValues, emptyList())
-        }
-
-        log.debug { "Fill model for record $recordRef and template ${notification.templateRef}" }
-
         val defaultRequiredAtts = getDefaultRequiredAtts()
-
         val allLoadedAtts = HashMap<String, DataValue>()
-
-        var notificationsApi: NotificationsAppApi = notificationsAppApi
-        var selectedTemplate: EntityRef = notification.templateRef
 
         fun loadAtts(attributes: Set<String>): Map<String, Any?> {
             val result = HashMap<String, Any?>()
@@ -144,7 +129,31 @@ class NotificationServiceImpl(
             return result
         }
 
+        val defaultAtts = loadAtts(defaultRequiredAtts)
+
+        if (notification.templateRef == EntityRef.EMPTY) {
+            val requiredAttsValues = mutableMapOf<String, Any?>()
+            notification.additionalMeta[MODEL_ATTACHMENTS]?.let {
+                requiredAttsValues.putIfAbsent(MODEL_ATTACHMENTS, it)
+            }
+
+            requiredAttsValues.putAll(defaultAtts)
+
+            return TemplateWithModelData(
+                EntityRef.EMPTY,
+                false,
+                requiredAttsValues,
+                emptyList()
+            )
+        }
+
+        log.debug { "Fill model for record $recordRef and template ${notification.templateRef}" }
+
+        var notificationsApi: NotificationsAppApi = notificationsAppApi
+        var selectedTemplate: EntityRef = notification.templateRef
+
         val defaultAttsObj = ObjectData.create(loadAtts(defaultRequiredAtts))
+
         var templateData = notificationsApi.getTemplateData(
             selectedTemplate,
             defaultAttsObj,
@@ -259,7 +268,11 @@ class NotificationServiceImpl(
     }
 
     private fun getDefaultRequiredAtts(): Set<String> {
-        return setOf(TYPE_ATT)
+        return setOf(
+            NotificationConstants.TYPE_ATT,
+            NotificationConstants.PROCESS_WORKSPACE_ATT,
+            NotificationConstants.TYPE_WORKSPACE_ATT
+        )
     }
 
     private class TemplateWithModelData(

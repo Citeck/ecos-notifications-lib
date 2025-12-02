@@ -42,7 +42,10 @@ abstract class NotificationServiceTestBase {
         } else {
             object : NotificationsAppApi {
 
-                fun getExactTemplateData(baseTemplate: NotificationTemplateDto?, template: NotificationTemplateDto): GetTemplateDataExactTemplate {
+                fun getExactTemplateData(
+                    baseTemplate: NotificationTemplateDto?,
+                    template: NotificationTemplateDto
+                ): GetTemplateDataExactTemplate {
                     val requiredAtts = baseTemplate?.model?.values?.toMutableSet() ?: mutableSetOf()
                     template.model?.values?.forEach { requiredAtts.add(it) }
                     return GetTemplateDataExactTemplate(
@@ -91,7 +94,6 @@ abstract class NotificationServiceTestBase {
             }
         }
         val webApi = EcosWebAppApiMock("notifications")
-
         val commandsServices = object : CommandsServiceFactory() {
             override fun getEcosWebAppApi(): EcosWebAppApi {
                 return webApi
@@ -131,6 +133,15 @@ abstract class NotificationServiceTestBase {
                     return record
                 }
                 return null
+            }
+        })
+
+        records.recordsService.register(object : RecordAttsDao {
+            override fun getId(): String {
+                return "emodel/type"
+            }
+            override fun getRecordAtts(recordId: String): Any {
+                return TypeRecord()
             }
         })
 
@@ -190,6 +201,10 @@ abstract class NotificationServiceTestBase {
         fun getEcosType(): String {
             return typeId
         }
+    }
+
+    class TypeRecord() {
+        fun getWorkspace(): String? = null
     }
 
     class NotificationTemplateDto(
