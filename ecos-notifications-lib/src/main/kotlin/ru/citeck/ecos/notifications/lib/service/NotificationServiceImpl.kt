@@ -18,6 +18,7 @@ import ru.citeck.ecos.records2.predicate.element.elematts.ElementAttributes
 import ru.citeck.ecos.records3.RecordsServiceFactory
 import ru.citeck.ecos.records3.record.atts.schema.ScalarType
 import ru.citeck.ecos.records3.record.request.RequestContext
+import ru.citeck.ecos.txn.lib.TxnContext
 import ru.citeck.ecos.webapp.api.entity.EntityRef
 import java.time.Duration
 
@@ -48,10 +49,14 @@ class NotificationServiceImpl(
     override fun send(notification: Notification) {
         val command = prepareNotificationCommand(notification)
 
-        commandsService.execute {
-            this.ttl = Duration.ZERO
-            this.targetApp = NOTIFICATIONS_APP
-            this.body = command
+        log.debug { "Notification command prepared, scheduling dispatch after commit. Id: ${command.id}" }
+        TxnContext.doBeforeCommit(10_000f) {
+            log.debug { "Dispatching notification after commit. Id: ${command.id}" }
+            commandsService.execute {
+                this.ttl = Duration.ZERO
+                this.targetApp = NOTIFICATIONS_APP
+                this.body = command
+            }
         }
     }
 
